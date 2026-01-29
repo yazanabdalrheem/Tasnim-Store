@@ -1,0 +1,125 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Heebo:wght@300;400;500;700&family=Rubik:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+    /* Apple-like White Premium Palette */
+    --color-primary: #0A84FF;
+    /* iOS Blue */
+    --color-primary-dark: #0071e3;
+    /* Slightly darker for hover */
+    --color-primary-light: #e8f2ff;
+    /* Very light blue tint */
+
+    --color-secondary: #0B1220;
+    /* Dark Navy/Black for contrast elements */
+    --color-accent: #FFB020;
+    /* Subtle Gold/Orange for focus */
+
+    --color-success: #22C55E;
+    /* Green for success states */
+    --color-warning: #F59E0B;
+    /* Amber */
+    --color-error: #EF4444;
+    /* Red */
+
+    --color-surface: #FFFFFF;
+    --color-background: #F6F7F9;
+    /* Off-white for section backgrounds */
+
+    --color-text-main: #0B1220;
+    /* Deep Dark Blue/Black */
+    --color-text-muted: #64748B;
+    /* Cool Gray */
+    --color-border: #E6E8EC;
+    /* Light Border */
+
+    --font-heading: 'Heebo', 'Cairo', 'Inter', sans-serif;
+    --font-body: 'Rubik', 'Tajawal', 'Inter', sans-serif;
+
+    /* Spacing & Layout */
+    --radius-premium: 1rem;
+    /* 16px */
+
+    /* Clean Animations */
+    --animate-fade-in: fadeIn 0.4s ease-out forwards;
+    --animate-slide-up: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    /* More apple-like ease */
+    --animate-scale-in: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.96);
+        }
+
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+}
+
+@layer base {
+    body {
+        @apply bg-white text-text-main font-body antialiased overflow-x-hidden selection:bg-primary/20 selection:text-primary;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-heading tracking-tight text-text-main;
+    }
+}
+
+@layer utilities {
+
+    /* Clean Premium Card */
+    .card-clean {
+        @apply bg-white rounded-[16px] border border-[var(--color-border)] shadow-sm transition-all duration-300;
+    }
+
+    .card-clean:hover {
+        @apply shadow-md border-primary/20 -translate-y-[2px];
+    }
+
+    /* Premium Input */
+    .input-premium {
+        @apply w-full px-4 py-3 rounded-[12px] border border-[var(--color-border)] bg-gray-50/50 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all duration-200 outline-none placeholder:text-gray-400 text-text-main;
+    }
+
+    /* Glass Effect (Subtle) */
+    .glass-panel {
+        @apply bg-white/80 backdrop-blur-md border border-white/20;
+    }
+
+    /* Section Separation */
+    .section-alt {
+        @apply bg-[var(--color-background)];
+    }
+}
