@@ -251,57 +251,48 @@ export default function Checkout() {
                 // In real app, here we would verify transaction ID
             }
 
-            // 2. Create Order (Using correct JSONB Schema)
-            const { data: orderData, error: orderError } = await supabase
-                .from('orders')
-                .insert([
-                    {
-                        user_id: user?.id || null, // If user is logged in
-                        total_amount: totalToCharge,
-                        discount_amount: validDiscount,
-                        coupon_id: appliedCoupon?.id || null,
-                        status: paymentMethod === 'paypal' ? 'paid' : 'pending',
-                        customer_details: {
-                            full_name: formData.fullName,
-                            email: formData.email,
-                            phone: formData.phone,
-                            notes: formData.notes
-                        },
-                        shipping_address: {
-                            city: formData.city,
-                            address: formData.address,
-                            full_address: `${formData.city}, ${formData.address}`
-                        }
-                    }
-                ])
-                .select()
-                .single();
-
-            if (orderError) throw orderError;
-
-            // 3. Insert Order Items (Separate Table)
-            if (orderData) {
-                const orderItemsData = items.map(item => ({
-                    order_id: orderData.id,
-                    product_id: item.product.id,
-                    quantity: item.quantity,
-                    price_at_purchase: item.product.discount_price || item.product.price,
-                    metadata: item.metadata
-                }));
-
-                const { error: itemsError } = await supabase
-                    .from('order_items')
-                    .insert(orderItemsData);
-
-                if (itemsError) throw itemsError;
-
-                // 4. Redeem Coupon
-                if (appliedCoupon) {
-                    await supabase.rpc('redeem_coupon', {
-                        p_coupon_id: appliedCoupon.id,
-                        p_order_id: orderData.id
-                    });
+            // 2. Create Order (Using Secure RPC to bypass RLS issues for guests)
+            const orderPayload = {
+                user_id: user?.id || null,
+                total_amount: totalToCharge,
+                discount_amount: validDiscount,
+                coupon_id: appliedCoupon?.id || null,
+                status: paymentMethod === 'paypal' ? 'paid' : 'pending',
+                customer_details: {
+                    full_name: formData.fullName,
+                    email: formData.email,
+                    phone: formData.phone,
+                    notes: formData.notes
+                },
+                shipping_address: {
+                    city: formData.city,
+                    address: formData.address,
+                    full_address: `${formData.city}, ${formData.address}`
                 }
+            };
+
+            const itemsPayload = items.map(item => ({
+                product_id: item.product.id,
+                quantity: item.quantity,
+                price_at_purchase: item.product.discount_price || item.product.price,
+                metadata: item.metadata
+            }));
+
+            const { data: rpcData, error: rpcError } = await supabase.rpc('create_new_order', {
+                p_order_details: orderPayload,
+                p_items: itemsPayload
+            });
+
+            if (rpcError) throw rpcError;
+
+            // 3. Handle Success & Coupon
+            const orderId = rpcData?.id;
+
+            if (orderId && appliedCoupon) {
+                await supabase.rpc('redeem_coupon', {
+                    p_coupon_id: appliedCoupon.id,
+                    p_order_id: orderId
+                });
             }
 
             // 5. Success
