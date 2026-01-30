@@ -9,7 +9,8 @@ import type { Product } from "../types";
 import Card from "../components/ui/Card";
 import clsx from "clsx";
 import { formatPrice } from "../lib/utils";
-import RxModal from "../components/product/RxModal";
+import RxSelectionModal from "../components/product/RxSelectionModal";
+import type { RxCartMetadata } from "../types";
 
 export default function Cart() {
     const { t, i18n } = useTranslation();
@@ -247,14 +248,23 @@ export default function Cart() {
             {/* Edit Modal */}
             {
                 editingItem && (
-                    <RxModal
+                    <RxSelectionModal
                         isOpen={!!editingItem}
                         onClose={() => setEditingItem(null)}
-                        product={editingItem.product}
-                        onConfirm={(rxPayload) => {
+                        currentMetadata={editingItem.metadata}
+                        onSave={(metadata: RxCartMetadata) => {
                             // Remove old item and add new one
                             removeFromCart(editingItem.id);
-                            addToCart(editingItem.product, editingItem.quantity, { rx_payload: rxPayload }); // Update metadata key
+                            // We construct the full payload as expected by addToCart, though addToCart expects 'RxCartMetadata | undefined' for rx_payload
+                            // but currently addToCart signature in context might be taking (product, quantity, metadata).
+                            // Let's assume metadata object structure: { rx_payload: ... }
+
+                            // NOTE: RxSelectionModal returns RxCartMetadata. 
+                            // We need to pass it as { rx_payload: metadata } if addToCart expects the wrapping object,
+                            // OR just pass it if addToCart handles the merge.
+                            // Looking at existing OnConfirm: `rx_payload: rxPayload`
+                            // So we should pass:
+                            addToCart(editingItem.product, editingItem.quantity, { rx_payload: metadata });
                             addToast(t("cart.updated"), "success");
                             setEditingItem(null);
                         }}

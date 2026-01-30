@@ -336,7 +336,10 @@ export default {
         yearWarranty: "1-Year Warranty",
         reviewsLabel: "({rating} reviews)",
         comprehensiveCoverage: "Comprehensive coverage",
-        ordersOver: "Orders over ₪300"
+        ordersOver: "Orders over ₪300",
+        needLensesQuestion: "Do you need prescription lenses?",
+        withPrescriptionLenses: "With Prescription Lenses",
+        frameOnly: "Frame Only (No Lenses)"
     },
     booking: {
         selectType: "Select Exam Type",
@@ -745,11 +748,33 @@ export default {
             summary: "Summary"
         }
     },
+    rxModal: {
+        title: "Prescription Lenses",
+        question: "How would you like to provide your prescription?",
+        upload: { badge: "Recommended" },
+        manual: { badge: "Quick Entry" },
+        help: {
+            title: "I don’t know my prescription",
+            subtitle: "For the most accurate lenses, we recommend visiting Tasnim Optic for an eye exam. You can also send us a message in the site and we’ll help.",
+            dialogTitle: "Help choosing lenses",
+            dialogText: "For a perfect match, book an eye exam at Tasnim Optic or send us a message in the site.",
+            ctaExam: "Book an eye exam",
+            ctaMessage: "Send a message in the site"
+        }
+    },
+    lenses: {
+        selectPackageTitle: "Select Lens Package",
+        chooseDetails: "Choose Lenses Details"
+    },
+
     rx: {
+        question: "Do you need prescription lenses?",
+        with: "With Prescription Lenses",
+        frameOnly: "Frame Only (No Lenses)",
         title: "Prescription",
         none: "No prescription",
         noneDesc: "Buy frames only",
-        with: "With prescription",
+        withGeneric: "With prescription",
         withDesc: "Enter details or upload",
         usage: {
             title: "Lens Type",
@@ -782,7 +807,7 @@ export default {
         uploadSuccess: "File uploaded successfully",
         uploadError: "Failed to upload file. Please try again.",
         doYouNeedLenses: "Do you need prescription lenses?",
-        frameOnly: "Frame Only (No Lenses)",
+
         withLenses: "Yes, Prescription Lenses",
         chooseLenses: "Choose Lenses",
         chooseMethod: "How do you want to provide your prescription?",

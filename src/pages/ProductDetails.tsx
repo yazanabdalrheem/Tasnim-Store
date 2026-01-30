@@ -205,16 +205,16 @@ export default function ProductDetails() {
                                 <div>
                                     <h3 className="font-bold text-slate-900 mb-3 text-lg flex items-center gap-2">
                                         <Info size={18} className="text-primary" />
-                                        {t('rx.doYouNeedLenses', 'Do you need prescription lenses?')}
+                                        {t('product.needLensesQuestion', 'Do you need prescription lenses?')}
                                     </h3>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                                         <label className={clsx("cursor-pointer border-2 rounded-xl p-4 flex items-center gap-3 transition-all", rxChoice === 'frame_only' ? "border-primary bg-primary/5" : "border-slate-200 bg-white hover:border-slate-300")}>
                                             <input type="radio" name="rxChoice" value="frame_only" checked={rxChoice === 'frame_only'} onChange={() => { setRxChoice('frame_only'); setRxMetadata(null); }} className="w-5 h-5 text-primary focus:ring-primary" />
-                                            <span className="font-medium text-slate-900">{t('rx.frameOnly', 'Frame Only (No Lenses)')}</span>
+                                            <span className="font-medium text-slate-900">{t('product.frameOnly', 'Frame Only (No Lenses)')}</span>
                                         </label>
                                         <label className={clsx("cursor-pointer border-2 rounded-xl p-4 flex items-center gap-3 transition-all", rxChoice === 'with_lenses' ? "border-primary bg-primary/5" : "border-slate-200 bg-white hover:border-slate-300")}>
                                             <input type="radio" name="rxChoice" value="with_lenses" checked={rxChoice === 'with_lenses'} onChange={() => setRxChoice('with_lenses')} className="w-5 h-5 text-primary focus:ring-primary" />
-                                            <span className="font-medium text-slate-900">{t('rx.withLenses', 'With Prescription Lenses')}</span>
+                                            <span className="font-medium text-slate-900">{t('product.withPrescriptionLenses', 'With Prescription Lenses')}</span>
                                         </label>
                                     </div>
                                 </div>
@@ -222,7 +222,7 @@ export default function ProductDetails() {
                                 {/* 2. Package List (Only if 'with_lenses') */}
                                 {rxChoice === 'with_lenses' && (
                                     <div className="animate-in fade-in slide-in-from-top-4 space-y-4">
-                                        <h4 className="font-bold text-slate-900">{t('rx.selectPackage', 'Select Lenses Package')}</h4>
+                                        <h4 className="font-bold text-slate-900">{t('lenses.selectPackageTitle', 'Select Lenses Package')}</h4>
 
                                         {!rxMetadata ? (
                                             <div className="space-y-3">
@@ -233,7 +233,7 @@ export default function ProductDetails() {
                                                             <div className="flex-1">
                                                                 <div className="flex justify-between items-center mb-1">
                                                                     <span className="font-bold text-slate-900 text-lg">{lang === 'ar' ? pkg.label_ar : (lang === 'he' ? pkg.label_he : pkg.label_en)}</span>
-                                                                    <span className="font-bold text-primary">{price > 0 ? `+${price}₪` : 'Free'}</span>
+                                                                    <span className="font-bold text-primary">{price > 0 ? `+${price}₪` : t('rxModal.help.free', 'Free')}</span>
                                                                 </div>
                                                                 <p className="text-sm text-slate-500">{lang === 'ar' ? pkg.description_ar : (lang === 'he' ? pkg.description_he : pkg.description_en)}</p>
                                                             </div>
@@ -247,7 +247,7 @@ export default function ProductDetails() {
                                                                 className="shrink-0 whitespace-nowrap"
                                                             >
                                                                 <Edit2 size={16} className={isRTL ? "ml-2" : "mr-2"} />
-                                                                {t('rx.chooseLenses', 'Choose Lenses Details')}
+                                                                {t('lenses.chooseDetails', 'Choose Lenses Details')}
                                                             </Button>
                                                         </div>
                                                     );

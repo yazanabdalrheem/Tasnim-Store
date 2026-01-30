@@ -523,7 +523,10 @@ export default {
         yearWarranty: "אחריות לשנה",
         reviewsLabel: "(ביקורות {rating})",
         comprehensiveCoverage: "כיסוי מקיף",
-        ordersOver: "בהזמנות מעל ₪300"
+        ordersOver: "בהזמנות מעל ₪300",
+        needLensesQuestion: "האם צריך עדשות עם המרשם?",
+        withPrescriptionLenses: "עם מרשם",
+        frameOnly: "מסגרת בלבד (ללא עדשות)"
     },
     booking: {
         selectType: "בחר סוג בדיקה",
@@ -1011,11 +1014,34 @@ export default {
             summary: "סיכום"
         }
     },
+    rxModal: {
+        title: "עדשות מרשם",
+        question: "איך תרצו לספק את המרשם?",
+        upload: { badge: "מומלץ" },
+        manual: { badge: "הזנה מהירה" },
+        help: {
+            title: "לא יודעים את המרשם?",
+            subtitle: "כדי לוודא התאמה מדויקת לעיניים שלכם, מומלץ לקבוע בדיקת ראייה ב-Tasnim Optic. אפשר גם לשלוח לנו הודעה דרך האתר ונעזור לכם.",
+            dialogTitle: "עזרה בהתאמת עדשות",
+            dialogText: "לקבלת התאמה מושלמת, קבעו בדיקת ראייה ב-Tasnim Optic או שלחו לנו הודעה דרך האתר.",
+            ctaExam: "קבעו בדיקת ראייה",
+            ctaMessage: "שלחו הודעה דרך האתר"
+        }
+    },
+    lenses: {
+        selectPackageTitle: "בחירת חבילת עדשות",
+        chooseDetails: "בחירת פרטי עדשה"
+    },
+
     rx: {
+        question: "האם צריך עדשות עם מרשם?",
+        with: "עם עדשות מרשם",
+
         title: "מרשם",
         none: "ללא מרשם",
         noneDesc: "קניית מסגרת בלבד",
-        with: "עם מרשם",
+        withGeneric: "עם מרשם", // Renamed from duplicate
+        frameOnly: "מסגרת בלבד (ללא עדשות)",
         withDesc: "הזנת פרטים או העלאת קובץ",
         usage: {
             title: "סוג עדשה",
@@ -1051,6 +1077,12 @@ export default {
             selectSaved: "נא לבחור מרשם שמור",
             missingFile: "נא להעלות קובץ מרשם",
             disclaimer: "נא להזין ערכים לפי מרשם בלבד. האתר אינו תחליף לבדיקה, האחריות על נכונות הנתונים על המשתמש."
-        }
+        },
+        uploadPrompt: "לחץ להעלאה",
+        pdTip: "אם לא ידוע לכם ה-PD, עדיף לבחור העלאת צילום מרשם.",
+        fileUploaded: "הקובץ הועלה בהצלחה ✅",
+        basicRequired: "נא למלא מספר (SPH) ומרחק אישונים (PD)",
+        iHaveAstigmatism: "יש לי צילינדר (Astigmatism)",
+        free: "חינם"
     }
 };

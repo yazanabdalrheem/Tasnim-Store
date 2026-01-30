@@ -337,7 +337,10 @@ export default {
         yearWarranty: "ضمان سنة",
         reviewsLabel: "(تقييم {rating})",
         comprehensiveCoverage: "تغطية شاملة",
-        ordersOver: "للطلبات فوق 300₪"
+        ordersOver: "للطلبات فوق 300₪",
+        needLensesQuestion: "هل تحتاج عدسات طبية؟",
+        withPrescriptionLenses: "مع عدسات",
+        frameOnly: "إطار فقط (بدون عدسات)"
     },
     booking: {
         selectType: "اختر نوع الفحص",
@@ -748,11 +751,33 @@ export default {
             summary: "الملخص"
         }
     },
+    rxModal: {
+        title: "عدسات طبية",
+        question: "كيف تود تزويدنا بوصفة النظر؟",
+        upload: { badge: "موصى به" },
+        manual: { badge: "إدخال سريع" },
+        help: {
+            title: "لا أعرف الوصفة",
+            subtitle: "لضمان عدسات مناسبة تمامًا لعينيك، ننصح بحجز فحص نظر في Tasnim Optic. ويمكنك أيضًا إرسال رسالة لنا من داخل الموقع وسنساعدك.",
+            dialogTitle: "مساعدة في اختيار العدسات",
+            dialogText: "للحصول على عدسات دقيقة ومناسبة، احجز فحص نظر في Tasnim Optic أو أرسل لنا رسالة من داخل الموقع.",
+            ctaExam: "احجز فحص نظر",
+            ctaMessage: "أرسل رسالة من داخل الموقع"
+        }
+    },
+    lenses: {
+        selectPackageTitle: "اختيار باقة العدسات",
+        chooseDetails: "تفاصيل العدسة"
+    },
+
     rx: {
+        question: "هل تحتاج عدسات طبية؟",
+        with: "مع عدسات طبية",
+        frameOnly: "إطار فقط (بدون عدسات)",
         title: "وصفة طبية",
         none: "بدون وصفة",
         noneDesc: "شراء الإطار فقط",
-        with: "مع وصفة طبية",
+        withGeneric: "مع وصفة طبية",
         withDesc: "أدخل التفاصيل أو ارفع صورة",
         usage: {
             title: "نوع العدسة",
@@ -785,7 +810,7 @@ export default {
         uploadSuccess: "تم رفع الملف بنجاح",
         uploadError: "فشل رفع الملف. يرجى المحاولة مرة أخرى.",
         doYouNeedLenses: "هل تريد عدسات طبية؟",
-        frameOnly: "إطار فقط (بدون عدسات)",
+
         withLenses: "نعم، عدسات طبية",
         chooseLenses: "اختيار العدسات",
         chooseMethod: "كيف تود تزويد الوصفة؟",

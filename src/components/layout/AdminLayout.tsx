@@ -22,7 +22,9 @@ import {
     ChevronDown,
     User,
     ArrowRight,
-    ArrowLeft
+    ArrowLeft,
+    Menu,
+    X
 } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import clsx from "clsx";
@@ -35,7 +37,7 @@ export default function AdminLayout() {
     const [user, setUser] = useState<any>(null);
     const [userProfile, setUserProfile] = useState<any>(null);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-    // Removed unused isMobileSidebarOpen state
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [searchQuery, setSearchQuery] = useState("");
@@ -58,6 +60,11 @@ export default function AdminLayout() {
         }
         fetchUser();
     }, []);
+
+    // Close mobile sidebar on route change
+    useEffect(() => {
+        setIsMobileSidebarOpen(false);
+    }, [location.pathname]);
 
     // Close dropdown on outside click
     useEffect(() => {
@@ -171,22 +178,47 @@ export default function AdminLayout() {
     return (
         <div className="min-h-screen bg-[#F6F8FC] flex" dir={isRTL ? 'rtl' : 'ltr'}>
 
-            {/* Sidebar - Desktop Only */}
+            {/* Mobile Sidebar Overlay */}
+            {isMobileSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm animate-in fade-in duration-200"
+                    onClick={() => setIsMobileSidebarOpen(false)}
+                />
+            )}
+
+            {/* Sidebar */}
             <aside
                 className={clsx(
-                    "bg-white border-gray-200 transition-all duration-300 flex-col flex-shrink-0 hidden lg:flex relative",
-                    isRTL ? "border-l" : "border-r",
-                    isSidebarOpen ? "w-64" : "w-20"
+                    "bg-white border-gray-200 transition-all duration-300 flex-col flex-shrink-0 z-50",
+                    "fixed inset-y-0 lg:static lg:flex h-full", // Fixed on mobile, static on desktop
+                    isRTL ? "border-l right-0" : "border-r left-0",
+
+                    // Mobile Visibility transform
+                    !isMobileSidebarOpen && (isRTL ? "translate-x-full" : "-translate-x-full"),
+                    (isMobileSidebarOpen || isSidebarOpen) ? "translate-x-0" : "", // Open state
+                    "lg:translate-x-0", // Always visible on desktop (reset transform)
+
+                    // Width logic
+                    (isSidebarOpen || isMobileSidebarOpen) ? "w-64" : "w-20"
                 )}
             >
                 {/* Sidebar Header */}
                 <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200">
-                    {isSidebarOpen ? (
-                        <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
-                                <span className="text-white font-bold text-sm">T</span>
+                    {isSidebarOpen || isMobileSidebarOpen ? (
+                        <div className="flex items-center gap-3 w-full justify-between">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center">
+                                    <span className="text-white font-bold text-sm">T</span>
+                                </div>
+                                <span className="font-bold text-gray-900">{t('admin.layout.appName', 'Tasnim Admin')}</span>
                             </div>
-                            <span className="font-bold text-gray-900">{t('admin.layout.appName', 'Tasnim Admin')}</span>
+                            {/* Close button for mobile */}
+                            <button
+                                onClick={() => setIsMobileSidebarOpen(false)}
+                                className="lg:hidden p-2 text-slate-400 hover:text-slate-600 rounded-lg"
+                            >
+                                <X size={20} />
+                            </button>
                         </div>
                     ) : (
                         <div className="w-8 h-8 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center mx-auto">
@@ -199,7 +231,7 @@ export default function AdminLayout() {
                 <nav className="flex-1 p-3 space-y-6 overflow-y-auto">
                     {menuSections.map((section, idx) => (
                         <div key={idx}>
-                            {isSidebarOpen && (
+                            {(isSidebarOpen || isMobileSidebarOpen) && (
                                 <div className="px-3 pb-2">
                                     <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                                         {section.title}
@@ -220,10 +252,10 @@ export default function AdminLayout() {
                                                 {
                                                     "bg-blue-50 text-primary font-medium": isActive,
                                                     "text-gray-600 hover:bg-gray-50 hover:text-gray-900": !isActive,
-                                                    "justify-center": !isSidebarOpen,
+                                                    "justify-center": !isSidebarOpen && !isMobileSidebarOpen,
                                                 }
                                             )}
-                                            title={!isSidebarOpen ? item.label : undefined}
+                                            title={(!isSidebarOpen && !isMobileSidebarOpen) ? item.label : undefined}
                                         >
                                             {/* Active indicator */}
                                             {isActive && (
@@ -233,9 +265,9 @@ export default function AdminLayout() {
                                                 )} />
                                             )}
 
-                                            <Icon size={20} className={clsx({ "mx-auto": !isSidebarOpen })} />
+                                            <Icon size={20} className={clsx({ "mx-auto": !isSidebarOpen && !isMobileSidebarOpen })} />
 
-                                            {isSidebarOpen && (
+                                            {(isSidebarOpen || isMobileSidebarOpen) && (
                                                 <span className="flex-1">{item.label}</span>
                                             )}
                                         </Link>
@@ -252,12 +284,12 @@ export default function AdminLayout() {
                         onClick={handleLogout}
                         className={clsx(
                             "flex items-center gap-3 px-3 py-2.5 w-full text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200",
-                            { "justify-center": !isSidebarOpen }
+                            { "justify-center": !isSidebarOpen && !isMobileSidebarOpen }
                         )}
-                        title={!isSidebarOpen ? t('common.logout', 'Logout') : undefined}
+                        title={(!isSidebarOpen && !isMobileSidebarOpen) ? t('common.logout', 'Logout') : undefined}
                     >
                         <LogOut size={20} />
-                        {isSidebarOpen && <span>{t('common.logout', 'Logout')}</span>}
+                        {(isSidebarOpen || isMobileSidebarOpen) && <span>{t('common.logout', 'Logout')}</span>}
                     </button>
                 </div>
 
@@ -285,6 +317,14 @@ export default function AdminLayout() {
                 {/* Top Bar */}
                 <header className="sticky top-0 z-30 h-16 bg-white/80 backdrop-blur-md border-b border-gray-200">
                     <div className="flex items-center h-full px-4 lg:px-6 gap-4 w-full max-w-[1400px] mx-auto">
+
+                        {/* Mobile Menu Button */}
+                        <button
+                            onClick={() => setIsMobileSidebarOpen(true)}
+                            className="lg:hidden p-2 -ml-2 text-slate-500 hover:bg-slate-100 rounded-lg transition-colors"
+                        >
+                            <Menu size={24} />
+                        </button>
 
                         {/* Search Bar - Hidden on small screens when nav tabs visible */}
                         <div className="hidden xl:flex flex-1 max-w-xs">
