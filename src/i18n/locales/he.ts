@@ -130,7 +130,8 @@ export default {
         removed: "הוסר מהסל",
         updated: "העגלה עודכנה",
         cleared: "העגלה נוקתה",
-        secureCheckout: "תשלום מאובטח SSL"
+        secureCheckout: "תשלום מאובטח SSL",
+        lensesSummary: "עדשות: {{status}} — {{type}} — {{method}}"
     },
     wishlist: {
         title: "המועדפים שלי",
@@ -170,6 +171,7 @@ export default {
             faq: "שאלות ותשובות",
             notifications: "התראות",
             users: "משתמשים",
+            prescriptions: "מרשמים",
             content: "תוכן",
             settings: "הגדרות",
         },
@@ -972,6 +974,83 @@ export default {
             patientsDesc: "מטופלים מרוצים",
             certified: "100%",
             certifiedDesc: "מוסמכת ומורשית"
+        },
+    },
+    prescription: {
+        title: "פרטי מרשם",
+        useCase: {
+            distance: "למרחק",
+            reading: "לקריאה",
+            multifocal: "מולטיפוקל",
+            none: "ללא מרשם (אופנה)",
+            distanceDesc: "לראייה מרחוק (נהיגה, טלוויזיה)",
+            readingDesc: "לעבודה מקרוב (קריאה, טלפון)",
+            multifocalDesc: "עדשות מולטיפוקל לכל הטווחים",
+            noneDesc: "עדשות ללא מספר"
+        },
+        eye: {
+            od: "עין ימין (OD)",
+            os: "עין שמאל (OS)"
+        },
+        field: {
+            sphere: "מספר (SPH)",
+            cylinder: "צילינדר (CYL)",
+            axis: "ציר (Axis)",
+            add: "ADD",
+            pd: "PD (מרחק אישונים)"
+        },
+        actions: {
+            copy: "העתק מימין לשמאל",
+            next: "הבא",
+            back: "חזור",
+            confirm: "אישור והוספה לסל"
+        },
+        steps: {
+            useCase: "שימוש",
+            details: "הזנת פרטים",
+            summary: "סיכום"
+        }
+    },
+    rx: {
+        title: "מרשם",
+        none: "ללא מרשם",
+        noneDesc: "קניית מסגרת בלבד",
+        with: "עם מרשם",
+        withDesc: "הזנת פרטים או העלאת קובץ",
+        usage: {
+            title: "סוג עדשה",
+            distance: "למרחק (Distance)",
+            distanceDesc: "לראייה כללית (נהיגה, טלוויזיה)",
+            reading: "לקריאה (Reading)",
+            readingDesc: "לעבודה מקרוב (קריאה, טלפון)",
+            multifocal: "מולטיפוקל (Multifocal)",
+            multifocalDesc: "פרוגרסיב (לכל המרחקים)"
+        },
+        method: {
+            title: "איך תרצה לספק את המרשם?",
+            saved: "השתמש במרשם שמור",
+            manual: "מילוי פרטים ידנית",
+            upload: "העלאת צילום מרשם"
+        },
+        noSaved: "לא נמצאו מרשמים שמורים",
+        manualTitle: "הזנת פרטי מרשם",
+        rightEye: "עין ימין",
+        leftEye: "עין שמאל",
+        pd: "מרחק בין אישונים (PD)",
+        notes: "הערות (אופציונלי)",
+        notesPlaceholder: "בקשות מיוחדות?",
+        addToCart: "הוסף לעגלה",
+        uploadTitle: "העלאת מרשם",
+        tapToUpload: "לחץ להעלאה",
+        uploadTypes: "תמונה או PDF",
+        uploadSuccess: "הקובץ הועלה בהצלחה",
+        uploadError: "העלאת הקובץ נכשלה. אנא נסה שוב.",
+        error: {
+            missingSph: "אנא הזן ערך Sphere (SPH)",
+            missingAxis: "ציר נדרש כאשר יש צילינדר",
+            selectSaved: "נא לבחור מרשם שמור",
+            missingFile: "נא להעלות קובץ מרשם",
+            disclaimer: "נא להזין ערכים לפי מרשם בלבד. האתר אינו תחליף לבדיקה, האחריות על נכונות הנתונים על המשתמש."
         }
     }
 };

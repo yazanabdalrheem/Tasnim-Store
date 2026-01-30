@@ -2,15 +2,17 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 import type { Product } from '../types';
 
 export interface CartItem {
+    id: string; // Unique ID for the cart line item
     product: Product;
     quantity: number;
+    metadata?: any;
 }
 
 interface CartContextType {
     items: CartItem[];
-    addToCart: (product: Product, quantity?: number) => void;
-    removeFromCart: (productId: string) => void;
-    updateQuantity: (productId: string, quantity: number) => void;
+    addToCart: (product: Product, quantity?: number, metadata?: any) => void;
+    removeFromCart: (itemId: string) => void;
+    updateQuantity: (itemId: string, quantity: number) => void;
     clearCart: () => void;
     cartTotal: number;
     itemCount: number;
@@ -33,32 +35,45 @@ export function CartProvider({ children }: { children: ReactNode }) {
         localStorage.setItem('cart', JSON.stringify(items));
     }, [items]);
 
-    const addToCart = (product: Product, quantity: number = 1) => {
+    const addToCart = (product: Product, quantity: number = 1, metadata?: any) => {
         setItems(current => {
-            const existing = current.find(item => item.product.id === product.id);
-            if (existing) {
-                return current.map(item =>
-                    item.product.id === product.id
-                        ? { ...item, quantity: item.quantity + quantity }
-                        : item
-                );
+            // Check for identical item (same product ID AND same metadata)
+            const existingIndex = current.findIndex(item => {
+                if (item.product.id !== product.id) return false;
+                // Deep compare metadata
+                if (!metadata && !item.metadata) return true;
+                if (metadata && item.metadata) return JSON.stringify(metadata) === JSON.stringify(item.metadata);
+                return false;
+            });
+
+            if (existingIndex >= 0) {
+                const newItems = [...current];
+                newItems[existingIndex].quantity += quantity;
+                return newItems;
             }
-            return [...current, { product, quantity }];
+
+            // New Item
+            return [...current, {
+                id: crypto.randomUUID(),
+                product,
+                quantity,
+                metadata
+            }];
         });
     };
 
-    const removeFromCart = (productId: string) => {
-        setItems(current => current.filter(item => item.product.id !== productId));
+    const removeFromCart = (itemId: string) => {
+        setItems(current => current.filter(item => item.id !== itemId));
     };
 
-    const updateQuantity = (productId: string, quantity: number) => {
+    const updateQuantity = (itemId: string, quantity: number) => {
         if (quantity < 1) {
-            removeFromCart(productId);
+            removeFromCart(itemId);
             return;
         }
         setItems(current =>
             current.map(item =>
-                item.product.id === productId
+                item.id === itemId
                     ? { ...item, quantity }
                     : item
             )

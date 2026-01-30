@@ -28,6 +28,7 @@ interface PublicQuestion {
     user_name: string;
     question: string;
     answer: string;
+    category?: string;
 }
 
 export default function AskTasnim() {
@@ -83,13 +84,15 @@ export default function AskTasnim() {
             const { data: { user } } = await supabase.auth.getUser();
 
             // Prepend category if not supported database-side
-            const finalQuestion = `[Category: ${askForm.category}] ${askForm.question} `;
+            // const finalQuestion = `[Category: ${askForm.category}] ${askForm.question} `;
+            // Now we have a column!
 
             const { error } = await supabase.from('questions').insert([{
                 user_name: askForm.name,
                 user_phone: askForm.phone,
-                question: finalQuestion,
-                user_id: user?.id || null,  // Save user_id if logged in
+                question: askForm.question, // Just the question
+                category: askForm.category, // New column
+                user_id: user?.id || null,
             }]);
 
             if (error) throw error;
@@ -466,7 +469,14 @@ export default function AskTasnim() {
                                                     <div className="w-full">
                                                         <div className="flex justify-between items-start">
                                                             <h4 className="font-bold text-slate-900 text-lg mb-1">{q.question}</h4>
-                                                            <span className="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-full">{q.user_name}</span>
+                                                            <div className="flex gap-2">
+                                                                <span className="text-xs text-slate-400 bg-slate-50 px-2 py-1 rounded-full">{q.user_name}</span>
+                                                                {q.category && (
+                                                                    <span className="text-xs text-blue-500 bg-blue-50 px-2 py-1 rounded-full border border-blue-100">
+                                                                        {categories.find(c => c.id === q.category)?.label || q.category}
+                                                                    </span>
+                                                                )}
+                                                            </div>
                                                         </div>
 
                                                         {q.answer ? (

@@ -4,7 +4,7 @@ import { useCart } from "../context/CartContext";
 import { supabase } from "../lib/supabase";
 import { Button } from "../components/ui/Button";
 import { Input } from "../components/ui/Input";
-import { CheckCircle, AlertCircle, ShoppingBag, Lock, CreditCard, Tag, X, Wallet, Banknote } from "lucide-react";
+import { CheckCircle, AlertCircle, ShoppingBag, Lock, CreditCard, Tag, X, Wallet, Banknote, FileText } from "lucide-react";
 import { useToast } from "../context/ToastContext";
 import Card from "../components/ui/Card";
 import { Link } from "react-router-dom";
@@ -285,7 +285,8 @@ export default function Checkout() {
                     order_id: orderData.id,
                     product_id: item.product.id,
                     quantity: item.quantity,
-                    price_at_purchase: item.product.discount_price || item.product.price
+                    price_at_purchase: item.product.discount_price || item.product.price,
+                    metadata: item.metadata
                 }));
 
                 const { error: itemsError } = await supabase
@@ -550,6 +551,55 @@ export default function Checkout() {
                                                         {isRTL ? item.product.name_he : (item.product.name_en || item.product.name_he)}
                                                     </div>
                                                     <div className="text-slate-400 text-xs">x {item.quantity}</div>
+                                                    {/* Rx Summary */}
+                                                    {item.metadata?.rx_payload && item.metadata.rx_payload.mode !== 'none' && (
+                                                        <div className="text-[10px] text-slate-500 mt-1 bg-slate-50 p-2 rounded border border-slate-100">
+                                                            <div className="font-semibold text-slate-700 flex items-center gap-1 mb-1">
+                                                                <FileText size={10} className="text-primary" />
+                                                                {t('cart.lensesSummary', {
+                                                                    status: t('common.yes'),
+                                                                    type: t(`rx.usage.${item.metadata.rx_payload.usage}`),
+                                                                    method: item.metadata.rx_payload.mode === 'saved' ? t('rx.method.saved') :
+                                                                        item.metadata.rx_payload.mode === 'upload' ? t('rx.method.upload') :
+                                                                            t('rx.method.manual')
+                                                                })}
+                                                            </div>
+
+                                                            <div className="pl-3 border-l-2 border-slate-200 ml-0.5 space-y-0.5">
+                                                                {item.metadata.rx_payload.mode === 'manual' && item.metadata.rx_payload.manual && (
+                                                                    <div className="grid grid-cols-2 gap-x-2 gap-y-0.5">
+                                                                        {item.metadata.rx_payload.manual.od?.sph && (
+                                                                            <span>
+                                                                                <span className="font-bold">OD:</span> {item.metadata.rx_payload.manual.od.sph}
+                                                                            </span>
+                                                                        )}
+                                                                        {item.metadata.rx_payload.manual.os?.sph && (
+                                                                            <span>
+                                                                                <span className="font-bold">OS:</span> {item.metadata.rx_payload.manual.os.sph}
+                                                                            </span>
+                                                                        )}
+                                                                        {item.metadata.rx_payload.manual.pd && (
+                                                                            <span className="col-span-2">
+                                                                                <span className="font-bold">PD:</span> {item.metadata.rx_payload.manual.pd}
+                                                                            </span>
+                                                                        )}
+                                                                    </div>
+                                                                )}
+
+                                                                {item.metadata.rx_payload.mode === 'upload' && item.metadata.rx_payload.upload_url && (
+                                                                    <div className="flex items-center gap-1 truncate max-w-[120px]">
+                                                                        <span className="font-bold">{t('rx.fileUploaded', 'Rx File')}</span>
+                                                                    </div>
+                                                                )}
+
+                                                                {item.metadata.rx_payload.notes && (
+                                                                    <div className="text-slate-400 italic truncate max-w-[150px]">
+                                                                        "{item.metadata.rx_payload.notes}"
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    )}
                                                 </div>
                                                 <span className="font-semibold text-slate-900 shrink-0">
                                                     {formatPrice((item.product.discount_price || item.product.price) * item.quantity)}

@@ -10,6 +10,7 @@ import { clsx } from "clsx";
 import { useToast } from "../context/ToastContext";
 import Card from "../components/ui/Card";
 import ScrollToTop from "../components/ScrollToTop";
+import DatePicker from "../components/ui/DatePicker";
 
 export default function BookExam() {
     const { t, i18n } = useTranslation();
@@ -156,7 +157,7 @@ export default function BookExam() {
                         email: formData.email || null,
                         appointment_date: format(selectedDate, "yyyy-MM-dd"),
                         appointment_time: selectedTime,
-                        start_time: startTimeStr, // Useful for sorting/admin
+                        start_time: `${selectedTime}:00`, // HH:MM:SS for TIME column
                         notes: formData.notes || null,
                         page: window.location.pathname,
                         lang: i18n.language,
@@ -241,13 +242,11 @@ export default function BookExam() {
                                 <span className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm">1</span>
                                 {t("booking.selectDate")}
                             </h3>
-                            <Card className="p-6 border-slate-100 shadow-sm hover:shadow-md transition-shadow">
-                                <input
-                                    type="date"
-                                    min={new Date().toISOString().split("T")[0]}
-                                    value={format(selectedDate, "yyyy-MM-dd")}
-                                    onChange={(e) => setSelectedDate(new Date(e.target.value))}
-                                    className="w-full p-4 rounded-xl border border-slate-200 bg-white focus:bg-white focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-medium text-lg text-slate-800 shadow-sm cursor-pointer"
+                            <Card className="p-6 border-slate-100 shadow-sm hover:shadow-md transition-shadow overflow-visible relative z-20">
+                                <DatePicker
+                                    value={selectedDate}
+                                    onChange={setSelectedDate}
+                                    minDate={new Date()}
                                 />
                             </Card>
                         </div>

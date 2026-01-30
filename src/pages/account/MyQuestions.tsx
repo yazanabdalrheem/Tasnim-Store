@@ -13,7 +13,7 @@ interface Question {
     user_name: string;
     user_phone: string;
     question: string;
-    status: 'pending' | 'approved' | 'rejected';
+    status: 'pending' | 'approved' | 'rejected' | 'answered';
     answer?: string;
     created_at: string;
     deleted_by_user: boolean;
@@ -95,6 +95,7 @@ export default function MyQuestions() {
     const getStatusBadge = (status: string) => {
         switch (status) {
             case 'approved':
+            case 'answered':
                 return (
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-50 text-green-700 border border-green-200">
                         <CheckCircle size={14} />
@@ -190,7 +191,7 @@ export default function MyQuestions() {
                                 </Button>
                             </div>
 
-                            {question.status === 'approved' && question.answer && (
+                            {(question.status === 'approved' || question.status === 'answered') && question.answer && (
                                 <div className="mt-4 pt-4 border-t border-slate-100">
                                     <div className="flex items-start gap-3">
                                         <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">

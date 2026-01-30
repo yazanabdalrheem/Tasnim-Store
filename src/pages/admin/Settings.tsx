@@ -20,6 +20,7 @@ import {
     Info,
     RotateCcw,
     Bug,
+
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { clsx } from 'clsx';
@@ -52,6 +53,7 @@ export default function Settings() {
         whatsapp_enabled: false,
         whatsapp_admin_phone: '',
         debug_mode: false,
+
     });
 
     useEffect(() => {
@@ -59,6 +61,8 @@ export default function Settings() {
         if (settings && Object.keys(settings).length > 0) {
             const safe: any = {};
             for (const key of Object.keys(settings)) {
+
+
                 const v = (settings as any)[key];
                 if (v === null || v === undefined) {
                     // Keep booleans booleans
@@ -366,7 +370,8 @@ export default function Settings() {
                 logo_url: formData.logo_url,
                 hero_image_url: formData.hero_image_url,
                 primary_color: formData.primary_color,
-                whatsapp_enabled: formData.whatsapp_enabled
+                whatsapp_enabled: formData.whatsapp_enabled,
+
             };
 
             await updateSetting(payload);
@@ -604,6 +609,8 @@ export default function Settings() {
                                 />
                             </div>
                         </div>
+
+
 
                         {/* Working Hours */}
                         <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm space-y-6">

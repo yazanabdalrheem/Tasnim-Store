@@ -1,3 +1,4 @@
+// Types definition
 export type Language = 'he' | 'ar' | 'en';
 
 export interface LocalizedString {
@@ -22,6 +23,7 @@ export interface Product {
     main_image_url?: string;
     category_id: string;
     is_active: boolean;
+    requires_lenses?: boolean;
     product_images?: ProductImage[];
 
     // Calculated Fields from products_view
@@ -38,6 +40,31 @@ export interface Product {
     promotion_type?: 'percent' | 'fixed';
     promotion_value?: number;
     calculated_discount_percent?: number;
+
+    // Rx Flow
+    rx_config?: {
+        enabled: boolean;
+        allow_saved?: boolean;
+        allow_manual?: boolean;
+        allow_upload?: boolean;
+        requirement?: 'optional' | 'required';
+        ranges?: any;
+    };
+}
+
+
+
+
+export interface RxValue {
+    [key: string]: string | number;
+}
+
+export interface RxSelection {
+    use_case: 'none' | 'distance' | 'reading' | 'multifocal';
+    method: 'manual' | 'saved';
+    od?: RxValue;
+    os?: RxValue;
+    template_id?: string;
 }
 
 export interface ProductImage {
@@ -120,5 +147,31 @@ export interface OrderItem {
     product_id: string;
     quantity: number;
     price_at_purchase: number;
+    metadata?: any;
     product?: Product;
+}
+
+export interface RxEyeData {
+    sph: string;
+    cyl?: string;
+    axis?: string;
+    add?: string;
+}
+
+export interface RxCartMetadata {
+    with_lenses: boolean;
+    lens_package?: string; // id
+    lens_package_label?: string; // for display
+    lens_price_addon?: number;
+    rx_method?: 'upload' | 'manual' | 'help';
+    rx_manual?: {
+        od_sph: string;
+        os_sph: string;
+        pd: string;
+        od_cyl?: string;
+        os_cyl?: string;
+        od_axis?: string;
+        os_axis?: string;
+    };
+    rx_upload_url?: string;
 }

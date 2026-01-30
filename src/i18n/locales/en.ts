@@ -130,7 +130,8 @@ export default {
         removed: "Removed from cart",
         updated: "Cart updated",
         cleared: "Cart cleared",
-        secureCheckout: "Secure SSL Checkout"
+        secureCheckout: "Secure SSL Checkout",
+        lensesSummary: "Lenses: {{status}} — {{type}} — {{method}}"
     },
     wishlist: {
         title: "My Wishlist",
@@ -164,6 +165,7 @@ export default {
             notifications: "Notifications",
             admin: "Admin",
             users: "Users",
+            prescriptions: "Prescriptions",
             content: "Content",
             settings: "Settings"
         },
@@ -708,4 +710,105 @@ export default {
         }
     },
 
+    prescription: {
+        title: "Prescription Details",
+        useCase: {
+            distance: "Distance",
+            reading: "Reading",
+            multifocal: "Multifocal",
+            none: "None (Fashion/ Non-Rx)",
+            distanceDesc: "For seeing things far away (driving, TV)",
+            readingDesc: "For close work (reading, phone)",
+            multifocalDesc: "Progressive lenses for all distances",
+            noneDesc: "Lenses without prescription power"
+        },
+        eye: {
+            od: "OD",
+            os: "OS"
+        },
+        field: {
+            sphere: "Sphere (SPH)",
+            cylinder: "Cylinder (CYL)",
+            axis: "Axis",
+            add: "ADD",
+            pd: "PD (Pupillary Distance)"
+        },
+        actions: {
+            copy: "Copy OD to OS",
+            next: "Next",
+            back: "Back",
+            confirm: "Confirm & Add to Cart"
+        },
+        steps: {
+            useCase: "Use Case",
+            details: "Enter Details",
+            summary: "Summary"
+        }
+    },
+    rx: {
+        title: "Prescription",
+        none: "No prescription",
+        noneDesc: "Buy frames only",
+        with: "With prescription",
+        withDesc: "Enter details or upload",
+        usage: {
+            title: "Lens Type",
+            distance: "Distance",
+            distanceDesc: "For general vision (driving, TV)",
+            reading: "Reading",
+            readingDesc: "For close work",
+            multifocal: "Progressive (Multifocal)",
+            multifocalDesc: "See near, far, and in-between"
+        },
+        method: {
+            title: "How to provide prescription?",
+            saved: "Use saved prescription",
+            manual: "✍️ Enter Numbers Manually",
+            upload: "📷 Upload Prescription Image",
+            help: "🩺 I don't know – Book Exam/Contact"
+        },
+        noSaved: "No saved prescription found",
+        manualTitle: "Enter Prescription Details",
+        rightEye: "OD",
+        leftEye: "OS",
+        pd: "PD (Pupillary Distance)",
+        notes: "Notes (Optional)",
+        notesPlaceholder: "Any special requests?",
+        addToCart: "Add to Cart",
+        uploadTitle: "Upload Prescription",
+        uploadPrompt: "Click to upload",
+        tapToUpload: "Tap to upload",
+        uploadTypes: "Images or PDF",
+        uploadSuccess: "File uploaded successfully",
+        uploadError: "Failed to upload file. Please try again.",
+        doYouNeedLenses: "Do you need prescription lenses?",
+        frameOnly: "Frame Only (No Lenses)",
+        withLenses: "Yes, Prescription Lenses",
+        chooseLenses: "Choose Lenses",
+        chooseMethod: "How do you want to provide your prescription?",
+        recommended: "(Recommended)",
+        quickEntry: "Quick Entry",
+        contactUs: "Contact us or Book Exam",
+        pdTip: "If you don't know your PD, choose 'Upload' instead.",
+        fileUploaded: "File Uploaded ✅",
+        basicRequired: "Please fill SPH and PD",
+        iHaveAstigmatism: "I have Astigmatism (Cylinder)",
+        selectPackage: "Select Lenses Package",
+        modalTitle: "Prescription Lenses",
+        free: "Free",
+        od: "OD",
+        os: "OS",
+        error: {
+            missingSph: "Please enter Sphere (SPH) value",
+            missingAxis: "Axis is required when Cylinder is present",
+            selectSaved: "Please select a saved prescription",
+            missingFile: "Please upload a prescription file",
+            uploadRequired: "Please upload a prescription file",
+            pdRequired: "Please enter PD",
+            basicRequired: "Please enter SPH and PD",
+            sphRequired: "Please enter SPH",
+            axisRequired: "Please enter Axis",
+            disclaimer: 'Please enter values exactly as in your prescription. This website is not a substitute for an eye exam; you are responsible for the accuracy of the entered data.'
+        }
+    }
 };

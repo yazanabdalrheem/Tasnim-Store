@@ -23,6 +23,7 @@ import {
     User,
     ArrowRight,
     ArrowLeft,
+    Eye
 } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import clsx from "clsx";
@@ -106,6 +107,7 @@ export default function AdminLayout() {
                 { path: "/admin/categories", icon: Tag, label: t('admin.nav.categories', 'Categories') },
                 { path: "/admin/promotions", icon: Percent, label: t('admin.nav.promotions', 'Promotions') },
                 { path: "/admin/coupons", icon: Ticket, label: t('admin.nav.coupons', 'Coupons') },
+
             ]
         },
         {

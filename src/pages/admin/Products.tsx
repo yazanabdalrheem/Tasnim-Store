@@ -27,7 +27,8 @@ export default function Products() {
         price: 0,
         stock_quantity: 0,
         is_active: true,
-        category_id: ''
+        category_id: '',
+        requires_lenses: false
     });
     const [currentImages, setCurrentImages] = useState<ExtendedProductImage[]>([]);
 
@@ -66,7 +67,7 @@ export default function Products() {
             setCurrentImages(product.product_images ? [...product.product_images] : []);
         } else {
             setEditingProduct(null);
-            setFormData({ name_he: '', price: 0, stock_quantity: 0, is_active: true, category_id: '' });
+            setFormData({ name_he: '', price: 0, stock_quantity: 0, is_active: true, category_id: '', requires_lenses: false });
             setCurrentImages([]);
         }
         setIsModalOpen(true);
@@ -98,7 +99,13 @@ export default function Products() {
                         price: payload.price,
                         stock_quantity: payload.stock_quantity,
                         is_active: payload.is_active,
-                        category_id: payload.category_id
+                        category_id: payload.category_id,
+                        requires_lenses: payload.requires_lenses,
+                        // @ts-ignore
+                        rx_config: payload.rx_config,
+                        // Legacy: sync rx_enabled for easier filtering if needed, or ignore
+                        // @ts-ignore
+                        rx_enabled: payload.rx_config?.enabled || false
                     })
                     .eq('id', editingProduct.id);
                 if (error) throw error;
@@ -111,6 +118,11 @@ export default function Products() {
                         stock_quantity: payload.stock_quantity,
                         is_active: payload.is_active,
                         category_id: payload.category_id,
+                        requires_lenses: payload.requires_lenses,
+                        // @ts-ignore
+                        rx_config: payload.rx_config || { enabled: false },
+                        // @ts-ignore
+                        rx_enabled: payload.rx_config?.enabled || false,
                         main_image_url: null // Will be set in handleImageOperations
                     }])
                     .select()
@@ -362,6 +374,25 @@ export default function Products() {
                                         />
                                         <label htmlFor="active" className="text-sm font-medium text-gray-700">Active Product</label>
                                     </div>
+
+                                    <div className="flex items-center gap-2 pt-2">
+                                        <input
+                                            type="checkbox"
+                                            id="requires_lenses"
+                                            checked={formData.requires_lenses ?? false}
+                                            onChange={e => setFormData({
+                                                ...formData,
+                                                requires_lenses: e.target.checked
+                                            })}
+                                            className="w-4 h-4 text-primary border-gray-300 rounded focus:ring-primary"
+                                        />
+                                        <label htmlFor="requires_lenses" className="text-sm font-medium text-gray-700">
+                                            {isRTL ? 'מוצר דורש עדשות?' : 'Requires Lenses?'}
+                                            <span className="block text-xs text-gray-500 font-normal">
+                                                {isRTL ? 'הפעל רק למסגרות משקפיים רפואיים' : 'Enable only for prescription eyeglass frames'}
+                                            </span>
+                                        </label>
+                                    </div>
                                 </div>
 
                                 {/* Image Upload Section */}
@@ -372,6 +403,8 @@ export default function Products() {
                                         onImagesChange={setCurrentImages}
                                     />
                                 </div>
+
+
                             </div>
 
                             <div className="pt-4 flex gap-3 justify-end border-t mt-4">

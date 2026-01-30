@@ -13,7 +13,7 @@ export default function Footer() {
                     {/* Brand */}
                     <div className="col-span-1 md:col-span-1">
                         <Link to="/" className="flex items-center gap-2 mb-6 group">
-                            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center text-primary">
+                            <div className="w-10 h-10 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg shadow-primary/30">
                                 <span className="font-heading font-bold text-2xl">T</span>
                             </div>
                             <span className="text-xl font-bold font-heading text-slate-900">

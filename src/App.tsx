@@ -36,6 +36,7 @@ import Checkout from "./pages/Checkout";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 
+
 import ScrollToTop from "./components/ScrollToTop";
 
 export default function App() {
@@ -85,6 +86,7 @@ export default function App() {
             <Route path="promotions" element={<Promotions />} />
             <Route path="promotions/:id" element={<PromotionEditor />} />
             <Route path="users" element={<Users />} />
+
             {/* Add more admin sub-routes here later */}
           </Route>
         </Route>

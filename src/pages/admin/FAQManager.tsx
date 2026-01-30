@@ -3,9 +3,12 @@ import { supabase } from '../../lib/supabase';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Plus, Trash2, Edit, MessageCircle } from 'lucide-react';
-// import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from '../../components/ui/Table';
+import { useToast } from '../../context/ToastContext';
+import { useTranslation } from "react-i18next";
 
 export default function FAQManager() {
+    const { t } = useTranslation();
+    const { addToast } = useToast();
     const [activeTab, setActiveTab] = useState<'faq' | 'questions'>('faq');
     const [faqs, setFaqs] = useState<any[]>([]);
     const [questions, setQuestions] = useState<any[]>([]);
@@ -32,10 +35,20 @@ export default function FAQManager() {
                 setQuestions(data || []);
             }
         } catch (error) {
-            console.error(error);
+            // silent error
         } finally {
             setLoading(false);
         }
+    };
+
+    const getCategoryLabel = (id: string) => {
+        const map: Record<string, string> = {
+            'General': t('ask.cat.general', 'General'),
+            'Lens': t('ask.cat.lens', 'Lenses'),
+            'Frames': t('ask.cat.frames', 'Frames'),
+            'Eye Exam': t('ask.cat.exam', 'Eye Exam'),
+        };
+        return map[id] || id;
     };
 
     const handleSaveFaq = async (e: React.FormEvent) => {
@@ -51,9 +64,9 @@ export default function FAQManager() {
             setEditingFaq(null);
             setIsNewFaq(false);
             fetchData();
+            addToast('FAQ saved successfully', 'success');
         } catch (error) {
-            console.error(error);
-            alert('Error saving FAQ');
+            addToast('Error saving FAQ', 'error');
         }
     };
 
@@ -61,6 +74,7 @@ export default function FAQManager() {
         if (!confirm('Delete this FAQ?')) return;
         await supabase.from('faq').delete().eq('id', id);
         fetchData();
+        addToast('FAQ deleted', 'success');
     };
 
     const handleAnswerQuestion = async (id: string) => {
@@ -69,17 +83,28 @@ export default function FAQManager() {
             const { error } = await supabase.from('questions').update({
                 answer: answerText,
                 is_public: true,
-                status: 'answered'
+                status: 'approved'
             }).eq('id', id);
 
             if (error) throw error;
-            alert('Question answered and published!');
+            addToast('Question answered and published!', 'success');
             setAnswerText('');
             setSelectedQuestion(null);
             fetchData();
         } catch (error) {
-            console.error(error);
-            alert('Error answering question');
+            addToast('Error answering question', 'error');
+        }
+    };
+
+    const handleDeleteQuestion = async (id: string) => {
+        if (!confirm('Are you sure you want to delete this question?')) return;
+        try {
+            const { error } = await supabase.from('questions').delete().eq('id', id);
+            if (error) throw error;
+            addToast('Question deleted successfully', 'success');
+            fetchData();
+        } catch (error) {
+            addToast('Error deleting question', 'error');
         }
     };
 
@@ -182,7 +207,14 @@ export default function FAQManager() {
                                     </div>
                                     <div>
                                         <div className="font-bold text-gray-900">{q.user_name} <span className="text-xs font-normal text-gray-500">({q.user_phone})</span></div>
-                                        <div className="text-xs text-gray-400">{new Date(q.created_at).toLocaleDateString()}</div>
+                                        <div className="flex items-center gap-2 text-xs text-gray-400">
+                                            <span>{new Date(q.created_at).toLocaleDateString()}</span>
+                                            {q.category && (
+                                                <span className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded-full border border-blue-100">
+                                                    {getCategoryLabel(q.category)}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex gap-2">
@@ -221,9 +253,18 @@ export default function FAQManager() {
                                         </div>
                                     </div>
                                 ) : (
-                                    <Button size="sm" variant="outline" onClick={() => { setSelectedQuestion(q.id); setAnswerText(''); }}>
-                                        Answer Question
-                                    </Button>
+                                    <div className="flex gap-2 mt-4">
+                                        <Button size="sm" variant="outline" onClick={() => { setSelectedQuestion(q.id); setAnswerText(''); }}>
+                                            Answer Question
+                                        </Button>
+                                        <button
+                                            onClick={() => handleDeleteQuestion(q.id)}
+                                            className="p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                            title="Delete Question"
+                                        >
+                                            <Trash2 size={18} />
+                                        </button>
+                                    </div>
                                 )
                             )}
                         </div>

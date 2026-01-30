@@ -1,19 +1,30 @@
-import { useTranslation } from "react-i18next";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useCart } from "../context/CartContext";
+import { useToast } from "../context/ToastContext";
 import { Button } from "../components/ui/Button";
-import { Trash2, Plus, Minus, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck } from "lucide-react";
+import { Trash2, Plus, Minus, ArrowRight, ArrowLeft, ShoppingBag, ShieldCheck, FileText } from "lucide-react";
 import type { Product } from "../types";
 import Card from "../components/ui/Card";
 import clsx from "clsx";
 import { formatPrice } from "../lib/utils";
+import RxModal from "../components/product/RxModal";
 
 export default function Cart() {
     const { t, i18n } = useTranslation();
-    const { items, removeFromCart, updateQuantity, cartTotal } = useCart();
+    const { items, removeFromCart, updateQuantity, cartTotal, addToCart } = useCart();
+    const { addToast } = useToast();
     const isRtl = i18n.language === "ar" || i18n.language === "he";
     const Arrow = isRtl ? ArrowLeft : ArrowRight;
     const lang = (i18n.language || 'en') as 'he' | 'ar' | 'en';
+
+    // State for editing Rx
+    const [editingItem, setEditingItem] = useState<any>(null); // CartItem
+
+    const handleEditRx = (item: any) => {
+        setEditingItem(item);
+    };
 
     const getLocalizedName = (product: Product) => {
         const key = `name_${lang}` as keyof Product;
@@ -42,6 +53,7 @@ export default function Cart() {
         );
     }
 
+
     return (
         <div className="bg-white min-h-screen pb-20">
             {/* Header */}
@@ -60,14 +72,15 @@ export default function Cart() {
                 <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
                     {/* Cart Items List */}
                     <div className="lg:col-span-8 space-y-4">
-                        {items.map(({ product, quantity }) => {
+                        {items.map((item) => {
+                            const { id, product, quantity, metadata } = item;
                             const displayImage = product.main_image_url ||
                                 product.product_images?.[0]?.url ||
                                 (Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null);
 
                             return (
                                 <Card
-                                    key={product.id}
+                                    key={id}
                                     className="p-4 sm:p-6 flex flex-col sm:flex-row gap-6 items-center group transition-all duration-300 hover:shadow-lg border-slate-100 rounded-[24px]"
                                 >
                                     {/* Image */}
@@ -90,7 +103,7 @@ export default function Cart() {
                                         <h3 className="font-bold text-lg text-slate-900 truncate mb-1">
                                             {getLocalizedName(product)}
                                         </h3>
-                                        <div className="flex items-center justify-center sm:justify-start gap-3 mb-4 sm:mb-0">
+                                        <div className="flex items-center justify-center sm:justify-start gap-3 mb-1">
                                             <span className="text-slate-900 font-bold text-xl">
                                                 {formatPrice(product.discount_price || product.price, lang)}
                                             </span>
@@ -100,6 +113,57 @@ export default function Cart() {
                                                 </span>
                                             )}
                                         </div>
+
+                                        {item.metadata?.rx_payload && item.metadata.rx_payload.mode !== 'none' && (
+                                            <div className="text-[11px] text-slate-500 mt-2 bg-slate-50 p-2 rounded-lg border border-slate-100 inline-block text-start">
+                                                <div className="font-semibold text-slate-700 flex items-center gap-1.5 mb-1">
+                                                    <FileText size={12} className="text-primary" />
+                                                    {t('cart.lensesSummary', {
+                                                        status: t('common.yes'),
+                                                        type: t(`rx.usage.${item.metadata.rx_payload.usage}`),
+                                                        method: item.metadata.rx_payload.mode === 'saved' ? t('rx.method.saved') :
+                                                            item.metadata.rx_payload.mode === 'upload' ? t('rx.method.upload') :
+                                                                t('rx.method.manual')
+                                                    })}
+                                                </div>
+
+                                                {/* Detailed Info */}
+                                                <div className="pl-4 border-l-2 border-slate-200 ml-0.5 space-y-1">
+                                                    {item.metadata.rx_payload.mode === 'manual' && item.metadata.rx_payload.manual && (
+                                                        <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                                                            {item.metadata.rx_payload.manual.od?.sph && (
+                                                                <span className="whitespace-nowrap">
+                                                                    <span className="font-bold">OD:</span> {item.metadata.rx_payload.manual.od.sph} / {item.metadata.rx_payload.manual.od.cyl}
+                                                                </span>
+                                                            )}
+                                                            {item.metadata.rx_payload.manual.os?.sph && (
+                                                                <span className="whitespace-nowrap">
+                                                                    <span className="font-bold">OS:</span> {item.metadata.rx_payload.manual.os.sph} / {item.metadata.rx_payload.manual.os.cyl}
+                                                                </span>
+                                                            )}
+                                                            {item.metadata.rx_payload.manual.pd && (
+                                                                <span className="col-span-2">
+                                                                    <span className="font-bold">PD:</span> {item.metadata.rx_payload.manual.pd}
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                    )}
+
+                                                    {item.metadata.rx_payload.mode === 'upload' && item.metadata.rx_payload.upload_url && (
+                                                        <div className="flex items-center gap-1 text-blue-600 underline cursor-pointer truncate max-w-[150px]" onClick={() => window.open(item.metadata.rx_payload.upload_url, '_blank')}>
+                                                            {t('rx.fileUploaded', 'Rx File')}
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                <button
+                                                    onClick={() => handleEditRx(item)}
+                                                    className="text-primary hover:text-primary/80 font-medium text-xs mt-2 flex items-center gap-1"
+                                                >
+                                                    {t('common.edit')}
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Right Side: Controls */}
@@ -107,7 +171,7 @@ export default function Cart() {
                                         {/* Quantity Controls */}
                                         <div className="flex items-center gap-2 bg-slate-50 rounded-xl p-1.5 border border-slate-200">
                                             <button
-                                                onClick={() => updateQuantity(product.id, quantity - 1)}
+                                                onClick={() => updateQuantity(id, quantity - 1)}
                                                 className="w-8 h-8 flex items-center justify-center rounded-lg bg-white shadow-sm text-slate-600 hover:text-primary disabled:opacity-50 transition-colors"
                                                 disabled={quantity <= 1}
                                             >
@@ -115,7 +179,7 @@ export default function Cart() {
                                             </button>
                                             <span className="text-sm font-bold w-8 text-center text-slate-900 tabular-nums">{quantity}</span>
                                             <button
-                                                onClick={() => updateQuantity(product.id, quantity + 1)}
+                                                onClick={() => updateQuantity(id, quantity + 1)}
                                                 className="w-8 h-8 flex items-center justify-center rounded-lg bg-white shadow-sm text-slate-600 hover:text-primary transition-colors"
                                                 disabled={quantity >= (product.stock_quantity || 10)}
                                             >
@@ -125,7 +189,7 @@ export default function Cart() {
 
                                         {/* Remove */}
                                         <button
-                                            onClick={() => removeFromCart(product.id)}
+                                            onClick={() => removeFromCart(id)}
                                             className="text-xs text-slate-400 hover:text-red-500 font-medium transition-colors flex items-center gap-1 group/trash"
                                             title={t("common.remove")}
                                         >
@@ -177,8 +241,26 @@ export default function Cart() {
                             </Card>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </div >
+            </div >
+
+            {/* Edit Modal */}
+            {
+                editingItem && (
+                    <RxModal
+                        isOpen={!!editingItem}
+                        onClose={() => setEditingItem(null)}
+                        product={editingItem.product}
+                        onConfirm={(rxPayload) => {
+                            // Remove old item and add new one
+                            removeFromCart(editingItem.id);
+                            addToCart(editingItem.product, editingItem.quantity, { rx_payload: rxPayload }); // Update metadata key
+                            addToast(t("cart.updated"), "success");
+                            setEditingItem(null);
+                        }}
+                    />
+                )
+            }
+        </div >
     );
 }
