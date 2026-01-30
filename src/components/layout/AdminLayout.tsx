@@ -22,8 +22,7 @@ import {
     ChevronDown,
     User,
     ArrowRight,
-    ArrowLeft,
-    Eye
+    ArrowLeft
 } from "lucide-react";
 import { supabase } from "../../lib/supabase";
 import clsx from "clsx";

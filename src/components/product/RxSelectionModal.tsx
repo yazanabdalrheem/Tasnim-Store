@@ -17,7 +17,7 @@ interface RxSelectionModalProps {
     initialPackageId?: string;
 }
 
-export default function RxSelectionModal({ isOpen, onClose, onSave, currentMetadata, initialPackageId }: RxSelectionModalProps) {
+export default function RxSelectionModal({ isOpen, onClose, onSave, initialPackageId }: RxSelectionModalProps) {
     const { t, i18n } = useTranslation();
     const { addToast } = useToast();
     const lang = (i18n.language || 'en') as 'he' | 'ar' | 'en';

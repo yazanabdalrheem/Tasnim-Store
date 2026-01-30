@@ -73,7 +73,7 @@ export default function Cart() {
                     {/* Cart Items List */}
                     <div className="lg:col-span-8 space-y-4">
                         {items.map((item) => {
-                            const { id, product, quantity, metadata } = item;
+                            const { id, product, quantity } = item;
                             const displayImage = product.main_image_url ||
                                 product.product_images?.[0]?.url ||
                                 (Array.isArray(product.images) && product.images.length > 0 ? product.images[0] : null);
